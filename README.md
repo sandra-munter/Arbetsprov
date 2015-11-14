@@ -5,4 +5,4 @@ Run ```npm install```
 Run ```node index.js``` visit ```http://localhost:8089```
 
 ## Search
-Type a city name in the search field
+Type a city name in the search field, minimum 3 letters
