@@ -74,7 +74,9 @@ function onSearchResultClick(e) {
 function getData(value, callback) {
 	callback = callback || function() {};
 
-	var url = 'http://api.openweathermap.org/data/2.5/find?q=' + value + '&type=like&mode=json&appid=7a68049f2651ce7a5f0c51fc6ac3adce';
+	var
+		url = 'http://api.openweathermap.org/data/2.5/find?q=' + value + '&type=like&mode=json&appid=7a68049f2651ce7a5f0c51fc6ac3adce';
+
 	$.ajax({
 		url: url,
 		type: "GET",
@@ -88,7 +90,8 @@ function getData(value, callback) {
 }
 
 function filterResponse(res, param) {
-	var items = res['list'];
+	var
+		items = res['list'];
 
 	$('#search-results').empty();
 	for(var i in items) {
