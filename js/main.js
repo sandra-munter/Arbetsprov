@@ -15,12 +15,18 @@ function bindEvents() {
 }
 
 function onKeyInInput(e) {
+	var
+		$searchInput = $('#search-input');
+
 	if(e.keyCode == 40) {
 		setFocusOnSearchResults();
 		return;
 	}
-	if($('#search-input').val().length > 2) {
-		getData($('#search-input').val());
+	if($searchInput.val().length > 2) {
+		getData($searchInput.val());
+	}
+	if($searchInput.val().length == 0) {
+		$('#search-results').empty();
 	}
 }
 
@@ -48,6 +54,8 @@ function stepThroughResults(e) {
 			if($previous.length > 0) {
 				$activeItem.removeClass('active');
 				$previous.addClass('active');
+			} else {
+				$('#search-input').focus();
 			}
 		} else if(e.keyCode == 13) {
 			setSearchBoxValue($activeItem.text());
@@ -90,10 +98,16 @@ function filterResponse(res, param) {
 
 function createResultItem(item) {
 	var
-		$search_results = $('#search-results');
+		source  = $("#search-results-template").html(),
+		template = Handlebars.compile(source),
 
-	$search_results.find('li').removeClass('active');
-	$search_results.prepend('<li>' + item.name + '</li>');
+		data = {
+			results: [{
+				name: item.name
+			}]
+		};
+
+	$('#search-results').append(template(data));
 }
 
 function onSearchFormSubmit() {
@@ -159,27 +173,26 @@ function setSearchBoxValue(value) {
 }
 
 function createSearchItem(value) {
-	var
-		$ul     = $('#search-list'),
-		$li     = $('<li/>').addClass('search-item'),
-		$p      = $('<p/>'),
-		$button = $('<button/>').attr({
-						type:  'submit',
-						name:  'remove-search-item'
-					}).addClass('remove-search').text('Delete'),
-		$time   = $('<span>').addClass('time'),
-		$date   = $('<span>').addClass('date'),
+	if(value.length > 0) {
+		var
+			source  = $("#search-list-template").html(),
+			template = Handlebars.compile(source),
 
-		dt      = new Date(),
-		date    = dt.getFullYear() + "-" + dt.getMonth() + "-" + formatTime(dt.getDay()),
-		time    = dt.getHours() + ":" + formatTime(dt.getMinutes());
+			dt      = new Date(),
+			date    = dt.getFullYear() + "-" + dt.getMonth() + "-" + formatTime(dt.getDay()),
+			time    = dt.getHours() + ":" + formatTime(dt.getMinutes()),
 
-	if($ul.length < 1) {
-		$ul = $('<ul>').addClass('search-list').attr('id', 'search-list');
-		$('#searches').addClass('visible').append($ul);
+			data = {
+				searches: [{
+					value: value,
+					date: date,
+					time: time
+				}]
+			};
+
+		$('#searches').addClass('visible');
+		$('#search-list').prepend(template(data));
 	}
-		$li.append($p.text(value)).append($date.text(date)).append($time.text(time)).append($button);
-	$ul.prepend($li);
 }
 
 function removeItem($target){
